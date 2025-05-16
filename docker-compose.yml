@@ -1,0 +1,16 @@
+services:
+  v1-bot:
+    build:
+      context: ./bots/v1-bot
+      dockerfile: Dockerfile
+    env_file:
+      - ./bots/v1-bot/.env
+    volumes:
+      - ./bots/v1-bot/src:/usr/src/app/src
+      - v1_bot_node_modules:/usr/src/app/node_modules
+    environment:
+      DEPLOY_ON_STARTUP: ${DEPLOY_ON_STARTUP:-false}
+    restart: unless-stopped
+
+volumes:
+  v1_bot_node_modules:

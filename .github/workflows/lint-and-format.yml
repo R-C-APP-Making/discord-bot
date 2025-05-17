@@ -1,0 +1,38 @@
+name: Lint & Format
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  lint:
+    name: ESLint & Prettier Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+        # Make sure your package.json has:
+        #   "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+
+      - name: Check Prettier formatting
+        run: npx prettier --check "src/**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}"

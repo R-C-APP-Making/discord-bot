@@ -1,0 +1,31 @@
+# .eslintrc.yaml
+root: true
+
+env:
+  browser: true
+  node: true
+  es2021: true
+
+parserOptions:
+  ecmaVersion: 12
+  sourceType: module
+
+extends:
+  - eslint:recommended              # the core ESLint recommended rules
+  - plugin:prettier/recommended      # enables eslint-plugin-prettier & displays Prettier errors as ESLint errors
+  # (this also includes eslint-config-prettier under the hood)
+
+plugins:
+  - prettier
+
+rules:
+  # Turn on Prettier errors as ESLint errors:
+  prettier/prettier:
+    - error
+    # you can pass Prettier options here too; they override .prettierrc.yaml:
+    - semi: true
+      singleQuote: true
+
+  # Example: override or disable other ESLint rules:
+  no-console: warn
+  eqeqeq: error

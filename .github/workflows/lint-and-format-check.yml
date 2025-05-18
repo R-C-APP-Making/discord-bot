@@ -1,46 +1,47 @@
-# .github/workflows/lint-and-format-check.yml
-name: Lint & Format Check
+# .github/workflows/format-and-lint.yml
+name: Lint, Format & Commit
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches: 
-      - main
 
 jobs:
-  lint-and-prettier:
-    name: ESLint & Prettier Check
+  lint-and-fix:
     runs-on: ubuntu-latest
-
     steps:
-      # 1) Checkout full history (for any potential Git-based rules)
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
 
-      # 2) Install Node 20 & cache your npm downloads
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
-      # 3) Recursively find every bots/** folder, install & run lint/format checks
-      - name: Run ESLint & Prettier in each bot
+      - name: Loop through bots…
         run: |
-          failures=0
           for dir in $(find bots -type f -name package.json -exec dirname {} \; | sort -u); do
-            echo ":mag: Checking $dir"
+            echo "🔍 Linting $dir"
             pushd "$dir"
-
-              echo ":arrow_right:  Installing dependencies"
               npm ci
-
-              echo ":arrow_right:  Running ESLint"
               npm run lint
-
-              echo ":arrow_right:  Checking Prettier formatting"
-              npx prettier --check "**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}"
-
-            popd || exit 1
+              npx prettier --check "**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}" || {
+                echo "🔧 Formatting $dir"
+                npm run format
+                git add .
+              }
+            popd
           done
+
+      - name: Commit & Push fixes
+        run: |
+          if git diff --cached --quiet; then
+            echo "✅ No fixes needed"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: auto-fix lint & format"
+            git push
+          fi

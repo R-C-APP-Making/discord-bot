@@ -1,42 +1,38 @@
 // eslint.config.js
 const js = require('@eslint/js');
-const pluginPrettier = require('eslint-plugin-prettier');
 const pluginNode = require('eslint-plugin-node');
+const pluginPrettier = require('eslint-plugin-prettier');
 const globals = require('globals');
 
 module.exports = [
-  // 1) Core ESLint recommended rules
+  // 1) Core ESLint “recommended” rules
   js.configs.recommended,
 
-  // 2) Node.js-specific rules (deprecations, best practices)
+  // 2) Node.js best practices (deprecated APIs, callback patterns)
   pluginNode.configs.recommended,
 
-  // 3) Prettier integration + your overrides + globals
+  // 3) Prettier integration + custom rules + globals
   {
     languageOptions: {
-      ecmaVersion: 2021, // ES12
-      sourceType: 'module', // allow import/export
+      ecmaVersion: 2021, // ES12 syntax support
+      sourceType: 'module', // enable import/export
       globals: {
-        // bring in all standard Node.js globals (console, process, __dirname, etc.)
+        // pull in all standard Node.js env globals (console, process, __dirname, etc.)
         ...globals.node,
-        // if you use any additional custom globals, declare them here:
-        // MY_GLOBAL: 'readonly',
+        // add any additional project-specific globals here:
+        // MY_CUSTOM_GLOBAL: 'readonly',
       },
     },
-
-    // register both plugins so we can reference their rules
     plugins: {
-      prettier: pluginPrettier,
       node: pluginNode,
+      prettier: pluginPrettier,
     },
-
     rules: {
-      // Pull in all of eslint-plugin-prettier’s recommended rules,
-      // then override prettier/prettier with your inline options:
+      // enforce Prettier formatting as ESLint errors
       ...pluginPrettier.configs.recommended.rules,
       'prettier/prettier': ['error', { semi: true, singleQuote: true }],
 
-      // Your custom ESLint rules:
+      // your custom code-quality rules
       'no-console': 'warn',
       eqeqeq: 'error',
     },

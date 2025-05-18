@@ -3,42 +3,56 @@ name: Lint, Format & Commit
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   lint-and-fix:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code (full history, for pushes & PRs)
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: true
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js 20 (no npm cache)
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Loop through bots…
+      - name: Lint & auto-format each bot, then commit fixes
+        shell: bash
         run: |
+          # turn off exit-on-error so we can loop through all dirs
+          set +e
+
           for dir in $(find bots -type f -name package.json -exec dirname {} \; | sort -u); do
             echo "🔍 Linting $dir"
-            pushd "$dir"
-              npm ci
-              npm run lint
-              npx prettier --check "**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}" || {
-                echo "🔧 Formatting $dir"
-                npm run format
-                git add .
-              }
-            popd
+            pushd "$dir" >/dev/null
+
+            # clean install
+            npm ci
+
+            # run lint & prettier, capture failures
+            lint_status=0
+            prettier_status=0
+
+            npm run lint || lint_status=$?
+            npx prettier --check "**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}" || prettier_status=$?
+
+            # if either failed, auto-fix and stage
+            if [ $lint_status -ne 0 ] || [ $prettier_status -ne 0 ]; then
+              echo "🔧 Formatting $dir (lint=$lint_status, prettier=$prettier_status)"
+              npm run format
+              git add .
+            fi
+
+            popd >/dev/null
           done
 
-      - name: Commit & Push fixes
-        run: |
+          # now commit & push all staged fixes
           if git diff --cached --quiet; then
             echo "✅ No fixes needed"
           else
@@ -47,3 +61,14 @@ jobs:
             git commit -m "chore: auto-fix lint & format"
             git push
           fi
+
+          # finally—restore exit-on-error and re-run lint+prettier for real pass/fail
+          set -e
+          for dir in $(find bots -type f -name package.json -exec dirname {} \; | sort -u); do
+            echo "🔍 Final check $dir"
+            pushd "$dir" >/dev/null
+            npm ci
+            npm run lint
+            npx prettier --check "**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}"
+            popd >/dev/null
+          done

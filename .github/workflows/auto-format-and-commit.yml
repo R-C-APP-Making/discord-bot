@@ -1,0 +1,51 @@
+# .github/workflows/auto-format-and-commit.yml
+name: Auto Format & Commit
+
+on:
+  workflow_run:
+    workflows: 
+      - "Lint & Format Check" 
+    types: 
+      - completed 
+
+jobs:
+  format-and-push:
+    # Run *only* when the check workflow failed on a push
+    if: >
+      github.event.workflow_run.conclusion == 'failure'
+    name: Format & Push Fixes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code & persist creds
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Auto-format all bots (recursive)
+        run: |
+          for dir in $(find bots -type f -name package.json -exec dirname {} \; | sort -u); do
+            echo "🔧 Formatting $dir"
+            pushd "$dir"
+              npm ci
+              npm run format
+            popd
+            git add "$dir"
+          done
+
+      - name: Commit & Push fixes
+        run: |
+          if git diff --cached --quiet; then
+            echo "✅ No formatting changes to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: auto-format Node projects"
+            git push
+          fi

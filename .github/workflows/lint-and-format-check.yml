@@ -1,7 +1,6 @@
 # .github/workflows/format-and-lint.yml
 name: Lint, Format & Commit
 
-# allow the Action to push back to the repo
 permissions:
   contents: write
 
@@ -20,6 +19,8 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: true
+          # if this is a PR, check out its head branch; otherwise use the ref
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
       - name: Setup Node.js 20 (no npm cache)
         uses: actions/setup-node@v4
@@ -56,19 +57,6 @@ jobs:
             popd >/dev/null
           done
 
-      - name: Commit & push auto-fixes
-        if: github.event_name == 'push'
-        shell: bash
-        run: |
-          if git diff --cached --quiet; then
-            echo "✅ No auto-fixes to commit"
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git commit -m "chore: auto-fix lint & format"
-            git push
-          fi
-
       - name: Final check each bot
         shell: bash
         run: |
@@ -89,3 +77,15 @@ jobs:
 
             popd >/dev/null
           done
+          
+      - name: Commit & push auto-fixes
+          shell: bash
+          run: |
+            if git diff --cached --quiet; then
+              echo "✅ No auto-fixes to commit"
+            else
+              git config user.name "github-actions[bot]"
+              git config user.email "github-actions[bot]@users.noreply.github.com"
+              git commit -m "chore: auto-fix lint & format"
+              git push
+            fi

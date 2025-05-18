@@ -1,6 +1,10 @@
 # .github/workflows/format-and-lint.yml
 name: Lint, Format & Commit
 
+# allow the Action to push back to the repo
+permissions:
+  contents: write
+
 on:
   push:
     branches: [main]
@@ -14,18 +18,15 @@ jobs:
       - name: Checkout code (full history, for pushes & PRs)
         uses: actions/checkout@v4
         with:
-          # fetch full history so we can push back
           fetch-depth: 0
           persist-credentials: true
-          # on PRs, check out the head branch instead of the merge ref
-          ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
       - name: Setup Node.js 20 (no npm cache)
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Lint & auto-format each bot, then commit fixes
+      - name: Lint & auto-format each bot
         shell: bash
         run: |
           set +e   # allow failures so we can auto-fix
@@ -43,7 +44,7 @@ jobs:
 
             lint_status=0
             prettier_status=0
-            npm run lint || lint_status=$?
+            npm run lint         || lint_status=$?
             npx prettier --check "**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}" || prettier_status=$?
 
             if [ $lint_status -ne 0 ] || [ $prettier_status -ne 0 ]; then
@@ -55,9 +56,12 @@ jobs:
             popd >/dev/null
           done
 
-          # commit & push any fixes back to the same branch
+      - name: Commit & push auto-fixes
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
           if git diff --cached --quiet; then
-            echo "✅ No fixes needed"
+            echo "✅ No auto-fixes to commit"
           else
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -65,7 +69,10 @@ jobs:
             git push
           fi
 
-          set -e   # now make CI failures fatal
+      - name: Final check each bot
+        shell: bash
+        run: |
+          set -e   # make failures fatal now
 
           for dir in $(find bots \
                         -type f \

@@ -1,6 +1,7 @@
 // eslint.config.js
 const js = require('@eslint/js');
 const pluginPrettier = require('eslint-plugin-prettier');
+const pluginNode = require('eslint-plugin-node');
 
 module.exports = [
   // 1) Core ESLint rules

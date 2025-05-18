@@ -5,7 +5,7 @@ const pluginPrettier = require('eslint-plugin-prettier');
 module.exports = [
   // 1) Core ESLint rules
   js.configs.recommended,
-  js.configs.node,
+  pluginNode.configs.recommended,
 
   // 2) Prettier + custom rules + globals
   {
@@ -16,9 +16,15 @@ module.exports = [
       globals: {
         console: 'readonly',
         process: 'readonly',
+        __dirname: 'readonly',
+        module: 'readonly',
+        require: 'readonly',
       },
     },
-    plugins: { prettier: pluginPrettier },
+    plugins: {
+      prettier: pluginPrettier,
+      node: pluginNode,
+    },
     rules: {
       ...pluginPrettier.configs.recommended.rules,
       'prettier/prettier': ['error', { semi: true, singleQuote: true }],

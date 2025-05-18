@@ -31,6 +31,8 @@ for (const folder of commandFolders) {
   }
 }
 
+console.log('js');
+
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs
   .readdirSync(eventsPath)

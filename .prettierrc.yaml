@@ -1,0 +1,13 @@
+# .prettierrc.yaml
+semi: true            # add semicolons
+singleQuote: true     # use single quotes
+trailingComma: es5    # trailing commas where valid in ES5 (objects, arrays, etc.)
+printWidth: 80        # wrap at 80 characters
+tabWidth: 2           # two spaces per indent level
+useTabs: false        # indent with spaces, not tabs
+bracketSpacing: true  # spaces between brackets in object literals
+arrowParens: always   # include parentheses around a sole arrow function parameter
+endOfLine: 'lf'
+embeddedLanguageFormatting: 'auto'
+singleAttributePerLine: false
+htmlWhitespaceSensitivity: 'strict'

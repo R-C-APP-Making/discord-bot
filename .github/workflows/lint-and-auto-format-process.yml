@@ -1,0 +1,123 @@
+# .github/workflows/lint-and-auto-format-process.yml
+name: Lint Check & Auto Format Process
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Lint & Auto Format each bot package.json (REQUIRED DEPENDENCY)
+        shell: bash
+        run: |
+          set +e
+          for dir in $(find bots \
+                        -type f -name package.json \
+                        -not -path '*/node_modules/*' \
+                        -exec dirname {} \; \
+                        | sort -u); do
+            echo "🔍 Linting $dir"
+            pushd "$dir" >/dev/null
+
+              npm ci
+
+              lint_status=0; prettier_status=0
+
+              # only run lint if there's a "lint" script
+              if npm run | grep -q '^  lint'; then
+                npm run lint         || lint_status=$?
+              else
+                echo "⚠️  Skipping lint (no lint script)"
+              fi
+
+              # only run prettier if it's installed locally
+              if npx --no-install prettier --version >/dev/null 2>&1; then
+                npx prettier --check "**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}" || prettier_status=$?
+              else
+                echo "⚠️  Skipping prettier (not installed)"
+              fi
+
+              if [ $lint_status -ne 0 ] || [ $prettier_status -ne 0 ]; then
+                echo "🔧 Formatting $dir"
+
+                # only run format if there's a "format" script
+                if npm run | grep -q '^  format'; then
+                  npm run format
+                else
+                  echo "⚠️  Skipping format (no format script)"
+                fi
+
+                # only stage if formatting produced changes
+                if ! git diff --quiet; then
+                  git add .
+                  echo "✅ Staged formatting changes"
+                else
+                  echo "ℹ️  No formatting changes to stage"
+                fi
+              fi
+
+            popd >/dev/null
+          done
+
+      - name: Final check each bot
+        shell: bash
+        run: |
+          set -e
+
+          for dir in $(find bots \
+                        -type f -name package.json \
+                        -not -path '*/node_modules/*' \
+                        -exec dirname {} \; \
+                        | sort -u); do
+            echo "🔍 Final check $dir"
+            pushd "$dir" >/dev/null
+
+              npm ci
+
+              # only run lint if there's a "lint" script:
+              if npm run | grep -q '^  lint'; then
+                npm run lint
+              else
+                echo "⚠️  No lint script found; skipping lint step"
+              fi
+
+              # only run prettier if it's installed locally:
+              if npx --no-install prettier --version >/dev/null 2>&1; then
+                npx prettier --check "**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}"
+              else
+                echo "⚠️  Prettier not installed; skipping prettier check"
+              fi
+
+            popd >/dev/null
+          done
+
+      - name: Commit & push auto-fixes
+        shell: bash
+        run: |
+          if git diff --cached --quiet; then
+            echo "✅ No auto-fixes to commit"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: auto-fix lint & format"
+            git push
+          fi

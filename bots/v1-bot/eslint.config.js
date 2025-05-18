@@ -22,7 +22,12 @@ module.exports = [
     },
 
     languageOptions: {
-      ecmaVersion: 12,      // ES2021
+      env: {
+        node: true, // enable Node.js global vars (require, module, console, etc.)
+        es2021: true, // enable ES2021 globals like Promise
+      },
+
+      ecmaVersion: 12, // ES2021
       sourceType: 'module', // import/export
     },
   },

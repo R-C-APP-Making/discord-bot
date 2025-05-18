@@ -14,8 +14,11 @@ jobs:
       - name: Checkout code (full history, for pushes & PRs)
         uses: actions/checkout@v4
         with:
+          # fetch full history so we can push back
           fetch-depth: 0
           persist-credentials: true
+          # on PRs, check out the head branch instead of the merge ref
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
       - name: Setup Node.js 20 (no npm cache)
         uses: actions/setup-node@v4
@@ -25,8 +28,7 @@ jobs:
       - name: Lint & auto-format each bot, then commit fixes
         shell: bash
         run: |
-          # 1) Allow failures so we can auto-fix
-          set +e
+          set +e   # allow failures so we can auto-fix
 
           for dir in $(find bots \
                         -type f \
@@ -37,16 +39,13 @@ jobs:
             echo "🔍 Linting $dir"
             pushd "$dir" >/dev/null
 
-            # clean install
             npm ci
 
-            # run lint & prettier, capture exit codes
             lint_status=0
             prettier_status=0
-            npm run lint         || lint_status=$?
+            npm run lint || lint_status=$?
             npx prettier --check "**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}" || prettier_status=$?
 
-            # if either failed, auto-fix and stage
             if [ $lint_status -ne 0 ] || [ $prettier_status -ne 0 ]; then
               echo "🔧 Formatting $dir (lint=$lint_status, prettier=$prettier_status)"
               npm run format
@@ -56,7 +55,7 @@ jobs:
             popd >/dev/null
           done
 
-          # commit any auto-fixes
+          # commit & push any fixes back to the same branch
           if git diff --cached --quiet; then
             echo "✅ No fixes needed"
           else
@@ -66,8 +65,7 @@ jobs:
             git push
           fi
 
-          # 2) Re-enable exit-on-error and re-run for a proper pass/fail
-          set -e
+          set -e   # now make CI failures fatal
 
           for dir in $(find bots \
                         -type f \

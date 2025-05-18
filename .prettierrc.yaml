@@ -7,3 +7,7 @@ tabWidth: 2           # two spaces per indent level
 useTabs: false        # indent with spaces, not tabs
 bracketSpacing: true  # spaces between brackets in object literals
 arrowParens: always   # include parentheses around a sole arrow function parameter
+endOfLine: 'lf'
+embeddedLanguageFormatting: 'auto'
+singleAttributePerLine: false
+htmlWhitespaceSensitivity: 'strict'

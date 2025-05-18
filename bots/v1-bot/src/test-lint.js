@@ -1,6 +1,7 @@
-const foo = 1;
-console.log(foo);
+const foo = 1
+console.log( foo )
 
-const soo = 1;
-console.log(soo);
-console.log('Hello World');
+
+
+const soo = 1
+console.log( soo )

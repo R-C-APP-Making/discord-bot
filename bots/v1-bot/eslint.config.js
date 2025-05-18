@@ -6,24 +6,31 @@ module.exports = [
   // 1) ESLint’s built-in “recommended” JS rules
   js.configs.recommended,
 
-  // 2) Prettier integration
+  // 2) Prettier integration + your custom rules
   {
-    // register the plugin under the “prettier” name
+    // Tell ESLint which globals to provide
+    environment: {
+      node: true, // defines `process`, `console`, etc.
+      browser: false, // set to true if this code also runs in browsers
+      es2021: true, // enables ES12 globals like Promise.allSettled
+    },
+
+    // Register Prettier as a plugin
     plugins: { prettier: pluginPrettier },
 
-    // spread in all of plugin-prettier’s recommended rules,
-    // then override prettier/prettier with your inline opts
+    // Pull in all the plugin-prettier “recommended” rules,
+    // then override the prettier/prettier rule and add yours:
     rules: {
       ...pluginPrettier.configs.recommended.rules,
       'prettier/prettier': ['error', { semi: true, singleQuote: true }],
-      // your custom overrides:
       'no-console': 'warn',
       eqeqeq: 'error',
     },
 
+    // Parsing options
     languageOptions: {
-      ecmaVersion: 12,      // ES2021
-      sourceType: 'module', // import/export
+      ecmaVersion: 12, // ES2021
+      sourceType: 'module', // enable import/export
     },
   },
 ];

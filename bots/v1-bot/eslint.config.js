@@ -5,6 +5,7 @@ const pluginPrettier = require('eslint-plugin-prettier');
 module.exports = [
   // 1) Core ESLint rules
   js.configs.recommended,
+  js.configs.node,
 
   // 2) Prettier + custom rules + globals
   {

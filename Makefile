@@ -23,12 +23,20 @@ pull:
 	@$(COMPOSE) build --pull
 
 up:
-  # Starts all services in detached mode
-	@$(COMPOSE) up -d
+  # Starts services in detached mode
+    @if [ -z "$(SERVICE)" ]; then \
+    	$(COMPOSE) up -d; \
+	else \
+    	$(COMPOSE) up -d $(SERVICE); \
+	fi
 
 up-deploy:
   # Starts all services, forces a rebuild, and sets DEPLOY_ON_STARTUP so entrypoint.sh will run `npm run deploy`
-	@DEPLOY_ON_STARTUP=true $(COMPOSE) up -d --build
+        @if [ -z "$(SERVICE)" ]; then \
+          DEPLOY_ON_STARTUP=true $(COMPOSE) up -d --build; \
+        else \
+          DEPLOY_ON_STARTUP=true $(COMPOSE) up -d --build $(SERVICE); \
+        fi
 
 down:
   # Stops and removes all containers

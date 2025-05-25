@@ -3,6 +3,7 @@
 - [About](#about)
 - [Local Development Setup](#local-development-setup)
 - [Startup Procedures](#startup-procedures)
+- [Utility Commands](#utility-commands)
 - [Working on the Application](#working-on-the-application)
 - [Micro-services in Development Environment](#micro-services-in-development-environment)
 
@@ -42,6 +43,20 @@ Currently the only service is **v1-bot**, but the structure supports adding more
   make down
   ```
   You can build a specific service with `make up SERVICE=v1-bot`, `make up-deploy SERVICE=v1-bot`, `make deploy SERVICE=v1-bot`.
+
+## Utility Commands
+
+- Convert Windows line endings to Unix
+
+  ```sh
+  make dos2unix
+  ```
+
+  What this does:
+
+  1. **Detects** whether `dos2unix` is installed.
+  2. **Installs** it automatically via `apt-get`, `yum`, or Homebrew if missing.
+  3. **Traverse** the entire repo and **normalize** all files to Unix-style (LF) line endings.
 
 ## Working on the Application
 

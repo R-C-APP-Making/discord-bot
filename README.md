@@ -49,7 +49,7 @@ Currently the only service is **v1-bot**, but the structure supports adding more
 - Convert Windows line endings to Unix
 
   ```sh
-  make does2unix
+  make dos2unix
   ```
 
   What this does:

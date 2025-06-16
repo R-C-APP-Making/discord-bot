@@ -1,5 +1,6 @@
 # Path to your compose file
 COMPOSE = docker-compose -f docker-compose.yml
+INSTALL_DOS2UNIX ?= sudo apt-get update && sudo apt-get install -y dos2unix
 
 #
 #  Detect & define how to install dos2unix if it’s missing

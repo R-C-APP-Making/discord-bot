@@ -2,7 +2,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 
 const CHANNEL_ID = process.env.MOTD_CHANNEL_ID;
-const POST_HOUR  = 7; // the hour (UTC) you want your MOTD
+const POST_HOUR  = 20; // the hour (UTC) you want your MOTD
 
 const motdList = [
   '🌟 Believe in yourself! You are capable of amazing things.',

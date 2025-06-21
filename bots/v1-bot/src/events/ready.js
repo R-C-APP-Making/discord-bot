@@ -32,9 +32,9 @@ module.exports = {
         motd.sendMotd(client);
       },
       {
-        timezone: 'UTC',
+        timezone: 'America/New_York',
       }
     );
-    console.log(`✅ Scheduled MOTD daily at ${motd.POST_HOUR}:00 UTC`);
+    console.log(`✅ Scheduled MOTD daily at ${motd.POST_HOUR}:00 EST`);
   },
 };

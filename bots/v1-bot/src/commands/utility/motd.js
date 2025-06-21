@@ -2,7 +2,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 
 const CHANNEL_ID = process.env.MOTD_CHANNEL_ID;
-const POST_HOUR  = 7; // 9:00 UTC; change as needed
+const POST_HOUR  = 7; // the hour (UTC) you want your MOTD
 
 const motdList = [
   '🌟 Believe in yourself! You are capable of amazing things.',
@@ -30,6 +30,8 @@ module.exports = {
   async execute(interaction) {
     await interaction.reply(`**Message of the Day:**\n${getMotd()}`);
   },
-  // expose sendMotd so ready.js can schedule it
+
+  // used by ready.js to schedule via cron
   sendMotd,
+  POST_HOUR,
 };

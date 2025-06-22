@@ -1,12 +1,12 @@
 // src/commands/utility/motd.js
-const fs = require('node:fs');
+const fs   = require('node:fs');
 const path = require('node:path');
 const { SlashCommandBuilder } = require('discord.js');
 
-const LIST_PATH = path.resolve(__dirname, '../../motd.json');
-const OVERRIDES_PATH = path.resolve(__dirname, '../../overrides.json');
+const LIST_PATH       = path.resolve(__dirname, '../../motd.json');
+const OVERRIDES_PATH  = path.resolve(__dirname, '../../overrides.json');
 const CONFIG_PATH = path.resolve(__dirname, '../../motd-config.json');
-const CHANNEL_ID = process.env.MOTD_CHANNEL_ID;
+const CHANNEL_ID      = process.env.MOTD_CHANNEL_ID;
 
 function loadList() {
   return JSON.parse(fs.readFileSync(LIST_PATH, 'utf-8'));
@@ -39,7 +39,7 @@ function getMotd() {
 
   // fallback to rotating list
   const list = loadList();
-  const idx = Math.floor(Date.now() / 86_400_000) % list.length;
+  const idx  = Math.floor(Date.now() / 86_400_000) % list.length;
   return list[idx];
 }
 
@@ -53,7 +53,7 @@ async function sendMotd(client) {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('motd')
-    .setDescription('Show today’s Message of the Day'),
+    .setDescription("Show today’s Message of the Day"),
   async execute(interaction) {
     await interaction.reply(`**Message of the Day:**\n${getMotd()}`);
   },

@@ -1,5 +1,5 @@
 // src/commands/utility/motd-remove.js
-const fs = require('node:fs');
+const fs   = require('node:fs');
 const path = require('node:path');
 const { SlashCommandBuilder } = require('discord.js');
 
@@ -9,7 +9,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('motd-remove')
     .setDescription('Remove an entry from the MOTD list by its number')
-    .addIntegerOption((opt) =>
+    .addIntegerOption(opt =>
       opt
         .setName('number')
         .setDescription('Remove message based on its number')
@@ -19,12 +19,12 @@ module.exports = {
   async execute(interaction) {
     const list = JSON.parse(fs.readFileSync(JSON_PATH, 'utf-8'));
     const idxIn = interaction.options.getInteger('number');
-    const idx = idxIn - 1;
+    const idx   = idxIn - 1;
 
     if (idx < 0 || idx >= list.length) {
       return interaction.reply({
         content: `❌ Invalid index. Please choose between 1 and ${list.length}. You can also do /motd-pick to see the list.`,
-        ephemeral: true,
+        ephemeral: true
       });
     }
 
@@ -34,7 +34,7 @@ module.exports = {
 
     await interaction.reply({
       content: `🗑️ Removed MOTD #${idxIn}: "${removed}"\nThere are now ${list.length} entries left.`,
-      ephemeral: true,
+      ephemeral: true
     });
-  },
+  }
 };

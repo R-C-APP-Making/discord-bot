@@ -8,9 +8,8 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('motd-time')
     .setDescription('Set the hour (0-23 EST) the MOTD will post.')
-    .addIntegerOption((option) =>
-      option
-        .setName('hour')
+    .addIntegerOption(option =>
+      option.setName('hour')
         .setDescription('Hour in EST (0-23)')
         .setRequired(true)
         .setMinValue(0)

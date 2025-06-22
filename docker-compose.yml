@@ -11,3 +11,6 @@ services:
     environment:
       DEPLOY_ON_STARTUP: ${DEPLOY_ON_STARTUP:-false}
     restart: unless-stopped
+
+volumes:
+  v1_bot_node_modules:

@@ -10,12 +10,14 @@ module.exports = {
 
     // grab your motd module
     const motd = client.commands.get('motd');
-    if (!motd?.sendMotd || motd.POST_HOUR == null) {
-      console.warn('⚠️ motd command or sendMotd()/POST_HOUR not found');
+    if (!motd?.sendMotd || !motd.getPostHour) {
+      console.warn('⚠️ motd command or sendMotd()/getPostHour() not found');
       return;
     }
 
-    // If you still want test‐mode every 5 minutes:
+    const POST_HOUR = motd.getPostHour(); // 👈 get fresh value from config
+
+    // If you still want test mode every 5 minutes:
     if (process.env.MOTD_TEST === 'true') {
       console.log('🚀 MOTD_TEST mode: will post every 5 minutes');
       cron.schedule('*/5 * * * *', () => {
@@ -24,17 +26,17 @@ module.exports = {
       return;
     }
 
-    // Production: schedule at minute 0 of your POST_HOUR every day (UTC)
-    const schedule = `0 ${motd.POST_HOUR} * * *`;
+    // Production: schedule at minute 0 of your POST_HOUR every day (EST)
+    const schedule = `0 ${POST_HOUR} * * *`;
     cron.schedule(
       schedule,
       () => {
         motd.sendMotd(client);
       },
       {
-        timezone: 'America/New_York',
+        timezone: 'America/New_York', // ⏰ Adjusting to EST properly
       }
     );
-    console.log(`✅ Scheduled MOTD daily at ${motd.POST_HOUR}:00 EST`);
+    console.log(`✅ Scheduled MOTD daily at ${POST_HOUR}:00 EST`);
   },
 };

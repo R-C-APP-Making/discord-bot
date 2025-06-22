@@ -17,8 +17,8 @@ module.exports = {
     }
 
     const allMessages = await fetchChannelMessages(channel, {
-      messagesPerFetch: 0,
-      maxTotalMessages: 0,
+      messagesPerFetch: 100,
+      maxTotalMessages: 50,
       startDate: new Date('2025-05-18T12:00:00-05:00'),
       endDateExclusive: new Date('2025-06-23T12:00:00-05:00'),
       filter: (msg) => !msg.author.bot && msg.content.trim().length > 0,

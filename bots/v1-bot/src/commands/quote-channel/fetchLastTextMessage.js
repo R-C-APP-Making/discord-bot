@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require('discord.js');
 // Requires Privileged Gateway Intents in /Bots in its section Privileged Gateway Intents
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('fetch_last')
+    .setName('fetch_last_text_message')
     .setDescription('Fetches last message from Configured Channel.'),
   async execute(interaction) {
     // interaction.user is the object representing the User who ran the command

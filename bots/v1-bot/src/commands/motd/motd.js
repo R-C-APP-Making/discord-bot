@@ -16,9 +16,9 @@ function loadOverrides() {
   return JSON.parse(fs.readFileSync(OVERRIDES_PATH, 'utf-8'));
 }
 
-function saveOverrides(obj) {
-  fs.writeFileSync(OVERRIDES_PATH, JSON.stringify(obj, null, 2));
-}
+// function saveOverrides(obj) {
+//   fs.writeFileSync(OVERRIDES_PATH, JSON.stringify(obj, null, 2));
+// }
 
 // NEW: Load config (postHour) from JSON file
 function loadConfig() {

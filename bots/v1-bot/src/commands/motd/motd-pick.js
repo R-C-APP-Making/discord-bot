@@ -21,7 +21,7 @@ module.exports = {
     const idxIn = interaction.options.getInteger('index');
 
     // No index? Show the list with indexes
-    if (idxIn == null) {
+    if (idxIn === null) {
       // Build an embed with up to 25 fields (Discord limit)
       const embed = new EmbedBuilder()
         .setTitle('Available MOTD Entries')

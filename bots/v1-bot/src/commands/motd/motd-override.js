@@ -51,13 +51,13 @@ module.exports = {
     const idxIn  = interaction.options.getInteger('number');
 
     // validate mutual exclusivity
-    if (custom && idxIn != null) {
+    if (custom && idxIn !== null) {
       return interaction.reply({
         content: '❌ Please provide **either** a message **or** an number, not both.',
         ephemeral: true
       });
     }
-    if (!custom && idxIn == null) {
+    if (!custom && idxIn === null) {
       return interaction.reply({
         content: '❌ You must provide **either** a custom message **or** an number.',
         ephemeral: true
@@ -66,7 +66,7 @@ module.exports = {
 
     // determine the override text
     let overrideText;
-    if (idxIn != null) {
+    if (idxIn !== null) {
       const list = loadList();
       const idx  = idxIn - 1;
       if (idx < 0 || idx >= list.length) {

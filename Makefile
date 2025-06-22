@@ -1,5 +1,6 @@
 # Path to your compose file
 COMPOSE = docker-compose -f docker-compose.yml
+INSTALL_DOS2UNIX ?= sudo apt-get update && sudo apt-get install -y dos2unix
 
 #
 #  Detect & define how to install dos2unix if it’s missing
@@ -47,6 +48,7 @@ up:
 
 up-deploy:
   # Starts all services, forces a rebuild, and sets DEPLOY_ON_STARTUP so entrypoint.sh will run `npm run deploy`
+  # Opens a shell in a service; requires SERVICE=name
 	@if [ -z "$(SERVICE)" ]; then \
 	  DEPLOY_ON_STARTUP=true $(COMPOSE) up -d --build; \
 	else \
@@ -70,6 +72,7 @@ shell:
 
 deploy:
   # Runs your `npm run deploy` script inside a service; requires SERVICE=name
+  # ``make up-deploy SERVICE=v1-bot`` 
 	@if [ -z "$(SERVICE)" ]; then \
 	  echo "ERROR: specify SERVICE, e.g. make deploy SERVICE=v1-bot"; exit 1; \
 	fi
@@ -93,16 +96,21 @@ help:
 	@echo "Usage: make [target] [SERVICE=name]"
 	@echo ""
 	@echo "Targets:"
-	@echo "  build            Build all services"
-	@echo "  build-no-cache   Build without cache"
-	@echo "  build-service    Build one service (SERVICE=name)"
-	@echo "  pull             Pull latest base images"
-	@echo "  up               Start all services"
-	@echo "  up-deploy        Start + rebuild + deploy on startup"
-	@echo "  down             Stop and remove containers"
-	@echo "  logs             Tail logs"
-	@echo "  shell            Shell into a service (SERVICE=name)"
-	@echo "  deploy           Run deploy script inside a service"
-	@echo "  clean            Remove containers, volumes, images"
-	@echo "  dos2unix         Install (if needed) & normalize line endings"
+	@echo "  build           Build all services"
+	@echo "  build-no-cache  Build without cache"
+	@echo "  build-service   Build one service (SERVICE=name)"
+	@echo "  pull            Pull latest base images"
+	@echo "  up              Start all services (SERVICE=name)"
+  @echo "  up-deploy        Start + rebuild + deploy on startup"
+	@echo "  down            Stop and remove containers"
+	@echo "  logs            Tail logs"
+	@echo "  shell           Shell into a service (SERVICE=name)"
+	@echo "  deploy          Deploy commands in a service (SERVICE=name)"
+	@echo "  clean           Remove containers, volumes, images"
+  @echo "  dos2unix         Install (if needed) & normalize line endings"
 	@echo "  help             Show this message"
+	@echo ""
+	@echo "Note:"
+	@echo "  SERVICE         SERVICE is case and space sensitive."
+	@echo "                  To launch multiple, inclose with quotation marks"
+	@echo "                  I.E. SERVICE=\"v1-bot v2-bot\""

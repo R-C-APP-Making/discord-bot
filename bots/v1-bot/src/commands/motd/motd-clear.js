@@ -1,5 +1,5 @@
 // src/commands/utility/motd-clear.js
-const fs   = require('node:fs');
+const fs = require('node:fs');
 const path = require('node:path');
 const { SlashCommandBuilder } = require('discord.js');
 
@@ -11,11 +11,14 @@ module.exports = {
     .setDescription('Clear the override for today’s MOTD (revert to rotation)'),
 
   async execute(interaction) {
-    const key       = new Date().toISOString().slice(0, 10);
+    const key = new Date().toISOString().slice(0, 10);
     const overrides = JSON.parse(fs.readFileSync(OVERRIDES_PATH, 'utf-8'));
 
     if (!overrides[key]) {
-      return interaction.reply({ content: `❌ No override set for ${key}.`, ephemeral: true });
+      return interaction.reply({
+        content: `❌ No override set for ${key}.`,
+        ephemeral: true,
+      });
     }
 
     delete overrides[key];
@@ -23,7 +26,7 @@ module.exports = {
 
     await interaction.reply({
       content: `🗑️ Cleared override for **${key}**. Back to the rotating MOTD.`,
-      ephemeral: true
+      ephemeral: true,
     });
-  }
+  },
 };

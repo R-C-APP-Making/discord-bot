@@ -1,5 +1,5 @@
 // src/commands/utility/motd-pick.js
-const fs   = require('node:fs');
+const fs = require('node:fs');
 const path = require('node:path');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
@@ -8,8 +8,10 @@ const JSON_PATH = path.resolve(__dirname, '../../motd.json');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('motd-pick')
-    .setDescription('Retrieve a specific entry from the MOTD list (Leave empty to see list)')
-    .addIntegerOption(opt =>
+    .setDescription(
+      'Retrieve a specific entry from the MOTD list (Leave empty to see list)'
+    )
+    .addIntegerOption((opt) =>
       opt
         .setName('index')
         .setDescription('Pick which motd you would like to post')
@@ -28,7 +30,7 @@ module.exports = {
         .setColor('Random');
 
       list.forEach((msg, i) => {
-        embed.addFields({ name: `#${i+1}`, value: msg });
+        embed.addFields({ name: `#${i + 1}`, value: msg });
       });
 
       return interaction.reply({ embeds: [embed], ephemeral: true });
@@ -39,10 +41,10 @@ module.exports = {
     if (idx < 0 || idx >= list.length) {
       return interaction.reply({
         content: `❌ Invalid index. Please pick between 1 and ${list.length}.`,
-        ephemeral: true
+        ephemeral: true,
       });
     }
 
-    await interaction.reply(`**MOTD #${idx+1}:**\n${list[idx]}`);
+    await interaction.reply(`**MOTD #${idx + 1}:**\n${list[idx]}`);
   },
 };

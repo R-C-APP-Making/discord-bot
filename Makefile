@@ -17,7 +17,7 @@ ifeq (,$(shell command -v dos2unix))
   endif
 endif
 
-.PHONY: build build-no-cache build-service pull up up-deploy down logs shell deploy clean dos2unix help
+.PHONY: build build-no-cache build-service pull up up-deploy down logs shell deploy clean dos2unix node-clean help
 
 build:
   # Builds all services based on docker-compose.yml
@@ -90,6 +90,13 @@ dos2unix:
 	@echo "🔄 Converting all files to LF endings…"
 	@find . -type f -print0 | xargs -0 dos2unix || true
 
+node-clean:
+  # Does
+	@echo "➡️  Cleaning & reinstalling dependencies in '$(DIR)'"
+	@cd $(DIR) && \
+	  npm cache clean --force && \
+	  rm -rf node_modules package-lock.json && \
+	  npm install
 
 help:
   # Shows this help message
@@ -101,14 +108,15 @@ help:
 	@echo "  build-service   Build one service (SERVICE=name)"
 	@echo "  pull            Pull latest base images"
 	@echo "  up              Start all services (SERVICE=name)"
-	@echo "  up-deploy        Start + rebuild + deploy on startup"
+	@echo "  up-deploy       Start + rebuild + deploy on startup"
 	@echo "  down            Stop and remove containers"
 	@echo "  logs            Tail logs"
 	@echo "  shell           Shell into a service (SERVICE=name)"
 	@echo "  deploy          Deploy commands in a service (SERVICE=name)"
 	@echo "  clean           Remove containers, volumes, images"
-	@echo "  dos2unix         Install (if needed) & normalize line endings"
-	@echo "  help             Show this message"
+	@echo "  dos2unix        Install (if needed) & normalize line endings"
+	@echo "  node-clean      Clean & reinstall npm deps in DIR (default=.)"
+	@echo "  help            Show this message"
 	@echo ""
 	@echo "Note:"
 	@echo "  SERVICE         SERVICE is case and space sensitive."

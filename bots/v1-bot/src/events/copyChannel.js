@@ -9,8 +9,8 @@ module.exports = {
     // Expect comma-separated lists in your .env:
     // MONITORED_CHANNEL_IDS="111,222,333"
     // OUTPUT_CHANNEL_IDS="444,555"
-    const rawMonitored = process.env.MONITORED_CHANNEL_IDS || '';
-    const rawOutputs = process.env.OUTPUT_CHANNEL_IDS || '';
+    const rawMonitored = process.env.COPY_MONITORED_CHANNEL_IDS || '';
+    const rawOutputs = process.env.COPY_OUTPUT_CHANNEL_IDS || '';
 
     // Build arrays of trimmed IDs
     const monitoredIDs = rawMonitored

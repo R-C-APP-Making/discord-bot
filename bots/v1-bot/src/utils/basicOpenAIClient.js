@@ -1,5 +1,5 @@
 require('dotenv').config();
-const OpenAI = require('openai'); // default export, not destructured :contentReference[oaicite:4]{index=4}
+const OpenAI = require('openai');
 
 class BasicOpenAIClient {
   /**
@@ -12,7 +12,7 @@ class BasicOpenAIClient {
     // Instantiate the single OpenAI client directly
     this.client = new OpenAI({
       apiKey: apiKey || process.env.OPENAI_API_KEY,
-    }); // no Configuration or OpenAIApi classes :contentReference[oaicite:5]{index=5}
+    });
 
     this.model = model;
     this.systemPrompt = systemPrompt;
@@ -47,7 +47,7 @@ class BasicOpenAIClient {
     const response = await this.client.chat.completions.create({
       model: mdl,
       messages,
-    }); // same API surface, just different client instantiation :contentReference[oaicite:6]{index=6}
+    });
 
     return response.choices[0].message.content;
   }

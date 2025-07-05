@@ -1,11 +1,12 @@
 // src/commands/utility/motd.js
 const fs = require('node:fs');
-const path = require('node:path');
 const { SlashCommandBuilder } = require('discord.js');
 
-const LIST_PATH = path.resolve(__dirname, '../../motd.json');
-const OVERRIDES_PATH = path.resolve(__dirname, '../../overrides.json');
-const CONFIG_PATH = path.resolve(__dirname, '../../motd-config.json');
+// Turn each aliased module into its absolute file path
+const LIST_PATH = require.resolve('@src/motd.json');
+const OVERRIDES_PATH = require.resolve('@src/overrides.json');
+const CONFIG_PATH = require.resolve('@src/motd-config.json');
+
 const CHANNEL_ID = process.env.MOTD_CHANNEL_ID;
 
 function loadList() {

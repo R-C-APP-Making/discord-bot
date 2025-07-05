@@ -1,9 +1,8 @@
 // src/commands/utility/motd-remove.js
 const fs = require('node:fs');
-const path = require('node:path');
 const { SlashCommandBuilder } = require('discord.js');
 
-const JSON_PATH = path.resolve(__dirname, '../../motd.json');
+const JSON_PATH = require.resolve('@src/motd.json');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,7 +14,6 @@ module.exports = {
         .setDescription('Remove message based on its number')
         .setRequired(true)
     ),
-
   async execute(interaction) {
     const list = JSON.parse(fs.readFileSync(JSON_PATH, 'utf-8'));
     const idxIn = interaction.options.getInteger('number');
@@ -30,7 +28,7 @@ module.exports = {
 
     // Remove the entry
     const [removed] = list.splice(idx, 1);
-    fs.writeFileSync(JSON_PATH, JSON.stringify(list, null, 2));
+    fs.writeFileSync(JSON_PATH, JSON.stringify(list, null, 2), 'utf-8');
 
     await interaction.reply({
       content: `🗑️ Removed MOTD #${idxIn}: "${removed}"\nThere are now ${list.length} entries left.`,

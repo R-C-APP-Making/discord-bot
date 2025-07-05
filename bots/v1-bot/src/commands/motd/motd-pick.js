@@ -1,9 +1,8 @@
 // src/commands/utility/motd-pick.js
 const fs = require('node:fs');
-const path = require('node:path');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
-const JSON_PATH = path.resolve(__dirname, '../../motd.json');
+const JSON_PATH = require.resolve('@src/motd.json');
 
 module.exports = {
   data: new SlashCommandBuilder()

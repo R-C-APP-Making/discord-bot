@@ -1,5 +1,4 @@
-require('dotenv').config();
-const { BasicOpenAIClient } = require('../utils/basicOpenAIClient.js');
+const { BasicOpenAIClient } = require('@utils/basicOpenAIClient.js');
 
 module.exports = {
   name: 'messageCreate',

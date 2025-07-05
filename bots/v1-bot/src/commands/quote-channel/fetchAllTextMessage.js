@@ -1,5 +1,4 @@
-require('dotenv').config();
-const { fetchChannelMessages } = require('../../utils/fetchChannelMessages.js');
+const { fetchChannelMessages } = require('@utils/fetchChannelMessages.js');
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {

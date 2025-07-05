@@ -1,8 +1,8 @@
+// src/commands/utility/motd-time.js
+const fs = require('node:fs');
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
 
-const configPath = path.resolve(__dirname, '../../motd-config.json');
+const CONFIG_PATH = require.resolve('@src/motd-config.json');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -20,12 +20,12 @@ module.exports = {
     const hour = interaction.options.getInteger('hour');
 
     // load existing config
-    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
     config.postHour = hour;
 
     // save updated config
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf-8');
 
-    await interaction.reply(`✅ MOTD will be posted at **${hour}:00 EST**.`);
+    await interaction.reply(`✅ MOTD will post at **${hour}:00 EST**.`);
   },
 };

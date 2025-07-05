@@ -1,10 +1,9 @@
 // src/commands/utility/motd-override.js
 const fs = require('node:fs');
-const path = require('node:path');
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
-const LIST_PATH = path.resolve(__dirname, '../../motd.json');
-const OVERRIDES_PATH = path.resolve(__dirname, '../../overrides.json');
+const LIST_PATH = require.resolve('@src/motd.json');
+const OVERRIDES_PATH = require.resolve('@src/overrides.json');
 
 /**
  * @returns {string[]}
@@ -24,7 +23,7 @@ function loadOverrides() {
  * @param {Record<string,string>} obj
  */
 function saveOverrides(obj) {
-  fs.writeFileSync(OVERRIDES_PATH, JSON.stringify(obj, null, 2));
+  fs.writeFileSync(OVERRIDES_PATH, JSON.stringify(obj, null, 2), 'utf-8');
 }
 
 module.exports = {

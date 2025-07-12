@@ -1,4 +1,5 @@
 # .prettierrc.yaml
+
 semi: true # add semicolons
 singleQuote: true # use single quotes
 trailingComma: es5 # trailing commas where valid in ES5 (objects, arrays, etc.)

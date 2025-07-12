@@ -1,10 +1,11 @@
 # docker-compose.yml
 
 services:
-  v1-bot:
+  v1-bot: &v1bot
     build:
       context: ./bots/v1-bot
       dockerfile: Dockerfile
+      target: runtime
     env_file:
       - ./bots/v1-bot/.env
     volumes:
@@ -13,6 +14,16 @@ services:
     environment:
       DEPLOY_ON_STARTUP: ${DEPLOY_ON_STARTUP:-false}
     restart: unless-stopped
+  v1-bot-test:
+    <<: *v1bot
+    build:
+      context: ./bots/v1-bot
+      dockerfile: Dockerfile
+      target: test
+    command: sh -c "npm test && tail -f /dev/null"
+    environment:
+      DEPLOY_ON_STARTUP: 'false'
+    restart: 'no'
 
 volumes:
   v1_bot_node_modules:

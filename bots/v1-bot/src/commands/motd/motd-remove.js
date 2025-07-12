@@ -1,4 +1,5 @@
-// src/commands/utility/motd-remove.js
+// bots/v1-bot/src/commands/motd/motd-remove.js
+
 const fs = require('node:fs');
 const { SlashCommandBuilder } = require('discord.js');
 

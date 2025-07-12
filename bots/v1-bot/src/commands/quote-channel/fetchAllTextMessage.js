@@ -1,3 +1,5 @@
+// bots/v1-bot/src/commands/quote-channel/fetchAllTextMessage.js
+
 const { fetchChannelMessages } = require('@utils/fetchChannelMessages.js');
 const { SlashCommandBuilder } = require('discord.js');
 

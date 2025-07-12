@@ -53,7 +53,6 @@ Currently the only service is **v1-bot**, but the structure supports adding more
   ```
 
   What this does:
-
   1. **Detects** whether `dos2unix` is installed.
   2. **Installs** it automatically via `apt-get`, `yum`, or Homebrew if missing.
   3. **Traverse** the entire repo and **normalize** all files to Unix-style (LF) line endings.

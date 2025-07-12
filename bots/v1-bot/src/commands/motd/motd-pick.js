@@ -1,4 +1,5 @@
-// src/commands/utility/motd-pick.js
+// bots/v1-bot/src/commands/motd/motd-pick.js
+
 const fs = require('node:fs');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 

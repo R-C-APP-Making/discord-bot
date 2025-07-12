@@ -1,3 +1,5 @@
+// bots/v1-bot/src/deploy-commands.js
+
 require('dotenv').config();
 require('module-alias/register');
 const { REST, Routes } = require('discord.js');

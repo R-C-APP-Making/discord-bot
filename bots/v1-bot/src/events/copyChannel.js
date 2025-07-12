@@ -1,3 +1,5 @@
+// bots/v1-bot/src/events/copyChannel.js
+
 module.exports = {
   name: 'messageCreate',
   async execute(message) {

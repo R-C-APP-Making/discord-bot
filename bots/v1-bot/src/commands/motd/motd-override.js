@@ -1,4 +1,5 @@
-// src/commands/utility/motd-override.js
+// bots/v1-bot/src/commands/motd/motd-override.js
+
 const fs = require('node:fs');
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 

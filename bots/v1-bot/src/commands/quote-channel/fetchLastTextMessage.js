@@ -1,3 +1,5 @@
+// bots/v1-bot/src/commands/quote-channel/fetchLastTextMessage.js
+
 const { SlashCommandBuilder } = require('discord.js');
 // Requires Privileged Gateway Intents in /Bots in its section Privileged Gateway Intents
 module.exports = {

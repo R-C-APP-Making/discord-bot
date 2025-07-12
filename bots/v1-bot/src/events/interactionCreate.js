@@ -1,3 +1,5 @@
+// bots/v1-bot/src/events/interactionCreate.js
+
 const { Events, MessageFlags } = require('discord.js');
 
 module.exports = {

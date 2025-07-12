@@ -1,4 +1,5 @@
-// eslint.config.js
+// bots/v1-bot/eslint.config.js
+
 const js = require('@eslint/js');
 const pluginPrettier = require('eslint-plugin-prettier');
 const globals = require('globals');

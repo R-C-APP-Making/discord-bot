@@ -1,4 +1,5 @@
-// src/events/ready.js
+// bots/v1-bot/src/events/ready.js
+
 const { Events } = require('discord.js');
 const cron = require('node-cron');
 

@@ -1,3 +1,5 @@
+# .gitattributes
+
 # force LF for shell scripts, JavaScript, JSON, etc.
 *.sh text eol=lf
 *.js text eol=lf

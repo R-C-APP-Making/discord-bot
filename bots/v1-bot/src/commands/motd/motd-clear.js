@@ -1,4 +1,5 @@
-// src/commands/utility/motd-clear.js
+// bots/v1-bot/src/commands/motd/motd-clear.js
+
 const fs = require('node:fs');
 const { SlashCommandBuilder } = require('discord.js');
 

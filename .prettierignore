@@ -1,3 +1,5 @@
+# .prettierignore
+
 # Ignore artifacts:
 build
 coverage

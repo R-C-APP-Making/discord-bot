@@ -1,3 +1,7 @@
+# bots/v1-bot/Dockerfile
+
+# 
+
 FROM node:20-slim AS runtime
 WORKDIR /usr/src/app
 

@@ -1,3 +1,5 @@
+// bots/v1-bot/src/index.js
+
 // Require the necessary discord.js classes
 require('dotenv').config();
 require('module-alias/register');

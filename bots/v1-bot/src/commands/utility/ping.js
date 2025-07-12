@@ -1,3 +1,5 @@
+// bots/v1-bot/src/commands/utility/ping.js
+
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {

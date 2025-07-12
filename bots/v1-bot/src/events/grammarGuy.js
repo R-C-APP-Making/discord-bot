@@ -1,3 +1,5 @@
+// bots/v1-bot/src/events/grammarGuy.js
+
 const { BasicOpenAIClient } = require('@utils/basicOpenAIClient.js');
 
 module.exports = {

@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
+
+# bots/v1-bot/entrypoint.sh
+
 set -e
 
 if [ "$DEPLOY_ON_STARTUP" = "true" ]; then

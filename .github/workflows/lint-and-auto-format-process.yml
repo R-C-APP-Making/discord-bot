@@ -1,4 +1,5 @@
 # .github/workflows/lint-and-auto-format-process.yml
+
 name: Lint Check & Auto Format Process
 
 permissions:

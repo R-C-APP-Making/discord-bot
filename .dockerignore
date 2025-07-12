@@ -1,3 +1,5 @@
+# .dockerignore
+
 # Packages
 **/node_modules
 

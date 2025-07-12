@@ -1,3 +1,5 @@
+// bots/v1-bot/src/utils/basicOpenAIClient.js
+
 const OpenAI = require('openai');
 
 class BasicOpenAIClient {

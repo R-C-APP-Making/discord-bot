@@ -5,6 +5,7 @@ require('dotenv').config();
 require('module-alias/register');
 const fs = require('node:fs');
 const path = require('node:path');
+const { sequelize } = require('@utils/database.js');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 
 // Create a new client instance
@@ -54,6 +55,11 @@ for (const file of eventFiles) {
     client.on(event.name, (...args) => event.execute(...args));
   }
 }
+
+client.once(Events.ClientReady, async () => {
+  await sequelize.sync();
+  console.log('DB synced, bot ready.');
+});
 
 client.on(Events.InteractionCreate, (interaction) => {
   if (!interaction.isChatInputCommand()) return;

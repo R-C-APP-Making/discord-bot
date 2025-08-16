@@ -61,6 +61,15 @@ down:
   # Stops and removes all containers
 	@$(COMPOSE) down
 
+restart-deploy:
+	@$(COMPOSE) down
+	@$(COMPOSE) build
+	@if [ -z "$(SERVICE)" ]; then \
+	  DEPLOY_ON_STARTUP=true $(COMPOSE) up -d --build; \
+	else \
+	  DEPLOY_ON_STARTUP=true $(COMPOSE) up -d --build $(SERVICE); \
+	fi
+
 logs:
   # Tails logs for all services
 	@$(COMPOSE) logs -f
@@ -110,7 +119,8 @@ help:
 	@echo "  build-service   Build one service (SERVICE=name)"
 	@echo "  pull            Pull latest base images"
 	@echo "  up              Start all services (SERVICE=name)"
-	@echo "  up-deploy       Start + rebuild + deploy on startup"
+	@echo "  up-deploy       Start + rebuild + deploy on startup  (SERVICE=name)"
+	@echo "  restart-deploy  Stop, rebuild, then start with DEPLOY_ON_STARTUP  (SERVICE=name)"
 	@echo "  down            Stop and remove containers"
 	@echo "  logs            Tail logs"
 	@echo "  shell           Shell into a service (SERVICE=name)"

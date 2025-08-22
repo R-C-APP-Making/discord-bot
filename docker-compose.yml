@@ -14,6 +14,9 @@ services:
     environment:
       DEPLOY_ON_STARTUP: ${DEPLOY_ON_STARTUP:-false}
     restart: unless-stopped
+    networks:
+      - starter-network
+
   v1-bot-test:
     <<: *v1bot
     build:
@@ -25,5 +28,45 @@ services:
       DEPLOY_ON_STARTUP: 'false'
     restart: 'no'
 
+  postgres_db:
+    container_name: postgres_db
+    build:
+      context: ./database/postgres_db
+      dockerfile: Dockerfile
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+      PROFILE: local
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready', '-d', 'postgres']
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - starter-network
+
+  pgadmin:
+    build:
+      context: ./database/pgadmin
+      dockerfile: Dockerfile
+    ports:
+      - '8001:8001'
+    depends_on:
+      - postgres_db
+    networks:
+      - starter-network
+
 volumes:
   v1_bot_node_modules:
+  postgres-data:
+
+networks:
+  starter-network:
+    driver: bridge

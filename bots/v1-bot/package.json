@@ -8,7 +8,8 @@
     "deploy": "node src/deploy-commands.js",
     "test": "jest --coverage",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md,json,yaml,yml}\"",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +29,7 @@
     "@eslint/js": "^9.26.0",
     "@eslint/json": "^0.12.0",
     "@eslint/markdown": "^6.4.0",
+    "@types/module-alias": "^2.0.4",
     "eslint": "^9.26.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.32.0",

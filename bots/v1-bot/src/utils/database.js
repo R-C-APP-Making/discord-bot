@@ -20,6 +20,7 @@ const Counters = sequelize.define(
     // Keep using the existing table to avoid breaking data now
     tableName: 'tags',
     freezeTableName: true,
+    timestamps: true,
   }
 );
 

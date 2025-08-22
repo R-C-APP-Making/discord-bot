@@ -8,6 +8,9 @@ module.exports = {
     .setName('showcounters')
     .setDescription('List all counter names.'),
 
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
     await interaction.deferReply();
 

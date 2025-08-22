@@ -1,13 +1,13 @@
 // bots/v1-bot/src/utils/basicOpenAIClient.js
 
-const OpenAI = require('openai');
+const { OpenAI } = require('openai');
 
 class BasicOpenAIClient {
   /**
    * @param {object} [options]
-   * @param {string} [options.apiKey]       – OPENAI_API_KEY (defaults to process.env)
-   * @param {string} [options.model]        – model name (defaults to 'gpt-4o-mini')
-   * @param {string} [options.systemPrompt] – default system prompt
+   * @param {string} [options.apiKey]       - OPENAI_API_KEY (defaults to process.env)
+   * @param {string} [options.model]        - model name (defaults to 'gpt-4o-mini')
+   * @param {string} [options.systemPrompt] - default system prompt
    */
   constructor({ apiKey, model = 'gpt-4o-mini', systemPrompt = '' } = {}) {
     // Instantiate the single OpenAI client directly
@@ -19,11 +19,17 @@ class BasicOpenAIClient {
     this.systemPrompt = systemPrompt;
   }
 
+  /**
+   * @param {string} model
+   */
   setModel(model) {
     this.model = model;
     return this;
   }
 
+  /**
+   * @param {string} prompt
+   */
   setSystemPrompt(prompt) {
     this.systemPrompt = prompt;
     return this;
@@ -32,14 +38,19 @@ class BasicOpenAIClient {
   /**
    * @param {object} params
    * @param {string} params.userContent     – the user’s message
-   * @param {string} [params.systemPrompt]  – override the default system prompt
-   * @param {string} [params.model]         – override the default model
-   * @returns {Promise<string>}             – the assistant’s reply
+   * @param {string} [params.systemPrompt]  - override the default system prompt
+   * @param {string} [params.model]         - override the default model
+   * @param {string} params.userContent     - the user's message
+   * @param {string} [params.systemPrompt]  - override the default system prompt
+   * @param {string} [params.model]         - override the default model
+   * @returns {Promise<string>}             - the assistant's reply
    */
   async chat({ userContent, systemPrompt, model }) {
     const sys = systemPrompt ?? this.systemPrompt;
     const mdl = model ?? this.model;
 
+    /** @typedef {import('openai/resources/chat/completions').ChatCompletionMessageParam} ChatMsg */
+    /** @type {ChatMsg[]} */
     const messages = [];
     if (sys) messages.push({ role: 'system', content: sys });
     messages.push({ role: 'user', content: userContent });
@@ -50,7 +61,7 @@ class BasicOpenAIClient {
       messages,
     });
 
-    return response.choices[0].message.content;
+    return response.choices[0].message.content ?? '';
   }
 }
 

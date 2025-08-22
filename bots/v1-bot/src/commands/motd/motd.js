@@ -9,6 +9,9 @@ const OVERRIDES_PATH = require.resolve('@src/overrides.json');
 const CONFIG_PATH = require.resolve('@src/motd-config.json');
 
 const CHANNEL_ID = process.env.MOTD_CHANNEL_ID;
+if (!CHANNEL_ID) {
+  throw new Error('MOTD_CHANNEL_ID is not set in the environment');
+}
 
 function loadList() {
   return JSON.parse(fs.readFileSync(LIST_PATH, 'utf-8'));
@@ -45,10 +48,13 @@ function getMotd() {
   return list[idx];
 }
 
+/**
+ * @param {import('discord.js').Client} client
+ */
 async function sendMotd(client) {
-  const ch = await client.channels.fetch(CHANNEL_ID);
-  if (ch?.isTextBased()) {
-    ch.send(`**Message of the Day:**\n${getMotd()}`);
+  const ch = await client.channels.fetch(/** @type {string} */ (CHANNEL_ID));
+  if (ch && 'send' in ch && typeof ch.send === 'function' && ch.isTextBased()) {
+    await ch.send(`**Message of the Day:**\n${getMotd()}`);
   }
 }
 
@@ -56,6 +62,9 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('motd')
     .setDescription('Show today’s Message of the Day'),
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
     await interaction.reply(`**Message of the Day:**\n${getMotd()}`);
   },

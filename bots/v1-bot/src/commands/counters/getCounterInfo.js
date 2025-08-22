@@ -14,6 +14,9 @@ module.exports = {
         .setRequired(true)
     ),
 
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
     await interaction.deferReply();
 
@@ -24,11 +27,11 @@ module.exports = {
       if (!counter)
         return interaction.editReply(`⚠️ Could not find counter: **${name}**`);
 
-      const created = counter.createdAt
-        ? time(counter.createdAt, 'F')
+      const created = counter.get('createdAt')
+        ? time(counter.getDataValue('createdAt'), 'F')
         : 'unknown time';
       return interaction.editReply(
-        `ℹ️ **${name}** was created by **${counter.username}** at ${created} and has been used **${counter.usage_count}** times.`
+        `ℹ️ **${name}** was created by **${counter.get('username')}** at ${created} and has been used **${counter.get('usage_count')}** times.`
       );
     } catch (error) {
       console.error('Error showing counter info:', error);

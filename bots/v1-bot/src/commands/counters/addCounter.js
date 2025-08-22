@@ -2,6 +2,7 @@
 
 const { SlashCommandBuilder } = require('discord.js');
 const { Counters } = require('@utils/database.js');
+const { UniqueConstraintError } = require('sequelize');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -20,6 +21,9 @@ module.exports = {
         .setRequired(true)
     ),
 
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
     await interaction.deferReply();
 
@@ -30,10 +34,10 @@ module.exports = {
     try {
       const counter = await Counters.create({ name, description, username });
       return interaction.editReply(
-        `✅ Counter **${counter.name}** created by **${username}**.`
+        `✅ Counter **${counter.get('name')}** created by **${username}**.`
       );
     } catch (error) {
-      if (error.name === 'SequelizeUniqueConstraintError') {
+      if (error instanceof UniqueConstraintError) {
         return interaction.editReply(
           '⚠️ A counter with that name already exists.'
         );

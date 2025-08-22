@@ -50,8 +50,11 @@ module.exports = {
     // optional: restrict to admins
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
 
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
-    const custom = interaction.options.getString('message');
+    const custom = interaction.options.getString('message'); // string | null
     const idxIn = interaction.options.getInteger('number');
 
     // validate mutual exclusivity
@@ -83,12 +86,13 @@ module.exports = {
       }
       overrideText = list[idx];
     } else {
-      overrideText = custom.trim();
-      if (!overrideText) {
+      if (custom === null) {
         return interaction.reply({
           content: '❌ Custom message cannot be empty.',
           ephemeral: true,
         });
+      } else {
+        overrideText = custom.trim();
       }
     }
 

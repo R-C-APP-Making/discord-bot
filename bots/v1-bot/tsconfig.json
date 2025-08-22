@@ -1,0 +1,25 @@
+// bots/v1-bot/tsconfig.json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@commands/*": ["src/commands/*"],
+      "@events/*": ["src/events/*"],
+      "@utils/*": ["src/utils/*"],
+      "@src/*": ["src/*"]
+    },
+
+    "target": "es2024",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*", "../../services/**/*", "../../scripts/**/*"],
+  "exclude": ["node_modules", "coverage", "dist"]
+}

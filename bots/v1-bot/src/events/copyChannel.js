@@ -2,6 +2,9 @@
 
 module.exports = {
   name: 'messageCreate',
+  /**
+   * @param {import('discord.js').Message} message
+   */
   async execute(message) {
     // ignore bots
     if (message.author.bot) return;
@@ -26,8 +29,14 @@ module.exports = {
     if (!monitoredIDs.includes(message.channel.id)) return;
 
     // Prepare the forwarded content
+    // some channels (DM) don't have .name → guard
+    const channelLabel =
+      'name' in message.channel
+        ? `#${message.channel.name}`
+        : message.channel.id;
+    const guildLabel = message.guild?.name || 'DM';
     const forwardText =
-      `🔔 [#${message.channel.name}] <${message.guild?.name || 'DM'}>\n` +
+      `🔔 [${channelLabel}] <${guildLabel}>\n` +
       `**${message.author.tag}**: ${message.content}`;
 
     // Send to each output channel
@@ -40,7 +49,12 @@ module.exports = {
         continue;
       }
       try {
-        await outChan.send({ content: forwardText });
+        // Narrow to channels that actually have `.send`
+        if ('send' in outChan && typeof outChan.send === 'function') {
+          await outChan.send({ content: forwardText });
+        } else {
+          console.warn(`⚠️ Channel ${outId} is text-based but not sendable.`);
+        }
       } catch (err) {
         console.error(`❌ Failed sending to ${outId}:`, err);
       }

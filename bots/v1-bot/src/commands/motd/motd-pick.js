@@ -18,7 +18,11 @@ module.exports = {
         .setRequired(false)
     ),
 
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
+    /** @type {string[]} */
     const list = JSON.parse(fs.readFileSync(JSON_PATH, 'utf-8'));
     const idxIn = interaction.options.getInteger('index');
 

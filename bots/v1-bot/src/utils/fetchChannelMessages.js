@@ -1,5 +1,10 @@
 // bots/v1-bot/src/utils/fetchChannelMessages.js
 
+/** @typedef {import('discord.js').TextChannel} TextChannel */
+/** @typedef {import('discord.js').Message} Message */
+/** @typedef {import('discord.js').Snowflake} Snowflake */
+/** @typedef {import('discord.js').Collection<Snowflake, Message>} MessageCollection */
+
 /**
  * Fetch messages from a channel, with pagination, date filtering, and optional limits.
  *
@@ -29,6 +34,7 @@ async function fetchChannelMessages(
   while (all.length < maxTotalMessages) {
     // don't ask for more than Discord allows or more than we still need
     const limit = Math.min(messagesPerFetch, maxTotalMessages - all.length);
+    /** @type {{ limit: number; before?: Snowflake }} */
     const opts = lastId ? { limit, before: lastId } : { limit };
 
     const batch = await channel.messages.fetch(opts);
@@ -46,7 +52,8 @@ async function fetchChannelMessages(
 
     // if we've hit the oldest or fewer than requested, stop
     if (batch.size < limit) break;
-    lastId = batch.last().id;
+    lastId = batch.last()?.id;
+    if (!lastId) break;
   }
 
   return all;

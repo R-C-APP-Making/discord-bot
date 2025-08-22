@@ -9,6 +9,9 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('motd-clear')
     .setDescription('Clear the override for today’s MOTD (revert to rotation)'),
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
     const key = new Date().toISOString().slice(0, 10);
     const overrides = JSON.parse(fs.readFileSync(OVERRIDES_PATH, 'utf-8'));

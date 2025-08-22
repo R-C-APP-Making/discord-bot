@@ -17,6 +17,9 @@ module.exports = {
         .setMinValue(0)
         .setMaxValue(23)
     ),
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
     const hour = interaction.options.getInteger('hour');
 

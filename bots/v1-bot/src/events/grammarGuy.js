@@ -4,6 +4,9 @@ const { BasicOpenAIClient } = require('@utils/basicOpenAIClient.js');
 
 module.exports = {
   name: 'messageCreate',
+  /**
+   * @param {import('discord.js').Message} message
+   */
   async execute(message) {
     // 1️⃣ Ignore bots
     if (message.author.bot) return;
@@ -20,8 +23,14 @@ module.exports = {
 
     if (!monitoredIDs.includes(message.channel.id)) return;
 
+    // Some channel types (e.g., DM) don't have .name → guard
+    const channelLabel =
+      'name' in message.channel
+        ? `#${message.channel.name}`
+        : message.channel.id;
+    const guildLabel = message.guild?.name || 'DM';
     const prefix =
-      `🔔 [#${message.channel.name}] <${message.guild?.name || 'DM'}>\n` +
+      `🔔 [${channelLabel}] <${guildLabel}>\n` +
       `**${message.author.tag}**: ${message.content}\n\n`;
 
     // 3️⃣ Prepare the “Grammar Guy” OpenAI client
@@ -57,7 +66,12 @@ You are “The Exquisite Critic,” the last bastion of linguistic elegance in a
         continue;
       }
       try {
-        await outChan.send({ content: finalMessage });
+        // Some text-based union members (PartialGroupDMChannel) don't expose .send
+        if ('send' in outChan && typeof outChan.send === 'function') {
+          await outChan.send({ content: finalMessage });
+        } else {
+          console.warn(`⚠️ Channel ${outId} is text-based but not sendable.`);
+        }
       } catch (err) {
         console.error(`❌ Failed to send to ${outId}:`, err);
       }

@@ -4,10 +4,15 @@ const { Events, MessageFlags } = require('discord.js');
 
 module.exports = {
   name: Events.InteractionCreate,
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
     if (!interaction.isChatInputCommand()) return;
-
-    const command = interaction.client.commands.get(interaction.commandName);
+    /** @typedef {import('discord.js').Collection<string, any>} CommandCollection */
+    /** @typedef {import('discord.js').Client<true> & { commands: CommandCollection }} ClientWithCommands */
+    const client = /** @type {ClientWithCommands} */ (interaction.client);
+    const command = client.commands.get(interaction.commandName);
 
     if (!command) {
       console.error(

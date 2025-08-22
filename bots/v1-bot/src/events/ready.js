@@ -6,11 +6,17 @@ const cron = require('node-cron');
 module.exports = {
   name: Events.ClientReady,
   once: true,
+  /**
+   * @param {import('discord.js').Client<true>} client
+   */
   async execute(client) {
     console.log(`Ready! Logged in as ${client.user.tag}`);
+    /** @typedef {import('discord.js').Collection<string, any>} CommandCollection */
+    /** @typedef {import('discord.js').Client<true> & { commands: CommandCollection }} ClientWithCommands */
+    const bot = /** @type {ClientWithCommands} */ (client);
 
     // grab your motd module
-    const motd = client.commands.get('motd');
+    const motd = bot.commands.get('motd');
     if (!motd?.sendMotd || !motd.getPostHour) {
       console.warn('⚠️ motd command or sendMotd()/getPostHour() not found');
       return;

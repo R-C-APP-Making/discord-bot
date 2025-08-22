@@ -16,8 +16,11 @@ module.exports = {
         .setDescription('The message to add')
         .setRequired(true)
     ),
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
-    const newMsg = interaction.options.getString('message').trim();
+    const newMsg = interaction.options.getString('message', true).trim();
     const list = JSON.parse(fs.readFileSync(JSON_PATH, 'utf-8'));
 
     list.push(newMsg);

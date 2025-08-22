@@ -15,9 +15,13 @@ module.exports = {
         .setDescription('Remove message based on its number')
         .setRequired(true)
     ),
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
+    /** @type {string[]} */
     const list = JSON.parse(fs.readFileSync(JSON_PATH, 'utf-8'));
-    const idxIn = interaction.options.getInteger('number');
+    const idxIn = interaction.options.getInteger('number', true);
     const idx = idxIn - 1;
 
     if (idx < 0 || idx >= list.length) {

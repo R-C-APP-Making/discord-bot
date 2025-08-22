@@ -1,0 +1,54 @@
+# .github/workflows/type-check-process.yml
+
+name: Type Check Process
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Type-check each bot (tsc --noEmit)
+        shell: bash
+        run: |
+          set -e   # exit if an error occurs
+          for dir in $(find bots \
+                        -type f -name package.json \
+                        -not -path '*/node_modules/*' \
+                        -exec dirname {} \; \
+                        | sort -u); do
+            echo "🧪 Type-checking $dir"
+            pushd "$dir" >/dev/null
+
+              npm ci
+
+              # Prefer a typecheck script if present
+              if npm run | grep -q '^  typecheck'; then
+                npm run typecheck
+              elif npx --no-install tsc -v >/dev/null 2>&1 && [ -f tsconfig.json ]; then
+                echo "ℹ️ No typecheck script, running tsc --noEmit"
+                npx tsc --noEmit
+              else
+                echo "⚠️  Skipping: no typecheck script or tsconfig.json"
+              fi
+
+            popd >/dev/null
+          done

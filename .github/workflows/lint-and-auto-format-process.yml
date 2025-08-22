@@ -30,7 +30,7 @@ jobs:
       - name: Lint & Auto Format each bot package.json (REQUIRED DEPENDENCY)
         shell: bash
         run: |
-          set +e
+          set +e  # exit if an error occurs
           for dir in $(find bots \
                         -type f -name package.json \
                         -not -path '*/node_modules/*' \

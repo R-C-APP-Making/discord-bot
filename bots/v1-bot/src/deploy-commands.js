@@ -6,6 +6,11 @@ const { REST, Routes } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 
+const { DISCORD_TOKEN, DISCORD_BOT_CLIENT_ID, DISCORD_GUILD_ID } = process.env;
+if (!DISCORD_TOKEN) throw new Error('DISCORD_TOKEN is not set');
+if (!DISCORD_BOT_CLIENT_ID) throw new Error('DISCORD_BOT_CLIENT_ID is not set');
+if (!DISCORD_GUILD_ID) throw new Error('DISCORD_GUILD_ID is not set');
+
 const commands = [];
 // Grab all the command folders from the commands directory you created earlier
 const foldersPath = path.join(__dirname, 'commands');
@@ -32,7 +37,7 @@ for (const folder of commandFolders) {
 }
 
 // Construct and prepare an instance of the REST module
-const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+const rest = new REST().setToken(DISCORD_TOKEN);
 
 // and deploy your commands!
 (async () => {
@@ -42,12 +47,14 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
     );
 
     // The put method is used to fully refresh all commands in the guild with the current set
-    const data = await rest.put(
-      Routes.applicationGuildCommands(
-        process.env.DISCORD_BOT_CLIENT_ID,
-        process.env.DISCORD_GUILD_ID
-      ),
+    const result = await rest.put(
+      Routes.applicationGuildCommands(DISCORD_BOT_CLIENT_ID, DISCORD_GUILD_ID),
       { body: commands }
+    );
+
+    const data = Array.isArray(result) ? result : [];
+    console.log(
+      `Successfully reloaded ${data.length} application (/) commands.`
     );
 
     console.log(

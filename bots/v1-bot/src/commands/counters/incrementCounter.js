@@ -14,6 +14,9 @@ module.exports = {
         .setRequired(true)
     ),
 
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
     await interaction.deferReply();
 
@@ -25,7 +28,9 @@ module.exports = {
         return interaction.editReply(`⚠️ Could not find counter: **${name}**`);
 
       await counter.increment('usage_count');
-      return interaction.editReply(counter.get('description'));
+      const desc = counter.getDataValue('description');
+
+      return interaction.editReply(desc ?? `✅ **${name}** incremented.`);
     } catch (error) {
       console.error('Error fetching counter:', error);
       return interaction.editReply(

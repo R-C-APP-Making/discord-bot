@@ -8,16 +8,21 @@ const path = require('node:path');
 const { sequelize } = require('@utils/database.js');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 
-// Create a new client instance
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
-});
-
-client.commands = new Collection();
+// Create a client that already has `.commands`
+/** @typedef {import('discord.js').Collection<string, any>} CommandCollection */
+/** @typedef {import('discord.js').Client<true> & { commands: CommandCollection }} ClientWithCommands */
+const client = /** @type {ClientWithCommands} */ (
+  Object.assign(
+    new Client({
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+      ],
+    }),
+    { commands: new Collection() }
+  )
+);
 
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);

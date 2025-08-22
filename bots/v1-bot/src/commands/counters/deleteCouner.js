@@ -14,6 +14,9 @@ module.exports = {
         .setRequired(true)
     ),
 
+  /**
+   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   */
   async execute(interaction) {
     await interaction.deferReply();
 

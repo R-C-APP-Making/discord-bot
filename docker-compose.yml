@@ -63,9 +63,24 @@ services:
     networks:
       - starter-network
 
+  # --- NEW SERVICE FOR THE SCRAPER ---
+  scraper:
+    build:
+      context: ./scraper # Points to the new folder containing the scraper files
+      dockerfile: Dockerfile
+    volumes:
+      # This now uses a named volume 'scraper-output' for better data persistence.
+      # The data will be managed by Docker and won't be tied to a specific host path.
+      - scraper-output:/app/output
+    restart: 'no' # The scraper runs once and exits, so no restart is needed.
+    networks:
+      - starter-network
+  # --- END NEW SERVICE ---
+
 volumes:
   v1_bot_node_modules:
   postgres-data:
+  scraper-output: {} # Define the new named volume for persistent scraper output.
 
 networks:
   starter-network:
